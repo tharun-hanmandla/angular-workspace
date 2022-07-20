@@ -1,0 +1,119 @@
+<div class="container mt-3">
+    <div class="row">
+        <div class="col col-md-5">
+            <form class="d-flex search">
+                <input class="form-control me-2" type="search" placeholder="Search By Product Name" aria-label="Search">
+                <button class="btn btn-outline-success search" type="submit">Search</button>
+            </form>
+        </div>
+        <div class="col col-md-7">
+            <button class="btn btn-outline-success me-2 add-button" type="button" data-bs-toggle="modal"
+                data-bs-target="#AddModal" (click)="onSelectAddProducts('Add Products')">Add
+                Products</button>
+        </div>
+    </div>
+    <div *ngIf="products.length != 0;else other_content">
+        <div class="product-list mt-3">
+
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <td>Id</td>
+                        <td>Product Name</td>
+                        <td>Product Price</td>
+                        <td>Product MFD</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let product of products; let i = index">
+                        <td>{{i+1}}</td>
+                        <td>{{product.productName}}</td>
+                        <td>{{product.productPrice}}</td>
+                        <td>{{product.productMFD}}</td>
+                        <td><button type="button" class="btn btn-primary edit" (click)="onEdit('Edit',product)">
+                                Edit
+                            </button>
+                            <button type="submit" class="btn btn-danger delete" (click)="onDelete('Delete',product)">
+                                Delete
+                            </button>
+                            <button type="button" class="btn btn-dark" data-bs-toggle="modal"
+                                (click)="onSelectView('View',product)" data-bs-target="#productDetails">
+                                View details</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+    <ng-template #other_content>
+
+        <div class="card mt-3">
+            <div class=" card-body">
+                <h4 class="card-text">No Data Available!!!</h4>
+            </div>
+        </div>
+
+    </ng-template>
+    <div class="modal fade Add-details" id="AddModal" tabindex="-1" *ngIf="selectedButton == 'Add Products'"
+        style="display: block;opacity: 1;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AddModalLabel">Add Product</h5>
+                    <button type="button" class="btn-close" (click)="closeView()"></button>
+                </div>
+                <div class="modal-body">
+                    <app-popup [productFormData]="productForm" (updateProduct)="recieveProducts($event,'Add Products')"
+                        [buttonType]="selectedButton">
+                    </app-popup>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade edit-details" tabindex="-1" aria-labelledby="EditModalLabel" *ngIf="selectedButton == 'Edit'"
+        style="display: block;opacity: 1;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="EditModalLabel">Product Edit</h5>
+                    <button type="button" class="btn-close" (click)="closeView()"></button>
+                </div>
+                <div class="modal-body">
+
+
+                    <app-popup [productFormData]="productForm" (updateProduct)="recieveProducts($event,'Edit')"
+                        [buttonType]="selectedButton">
+
+                    </app-popup>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade product-details" *ngIf="selectedButton == 'View'" style="display: block;opacity:1;">
+        <div class="product-details">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="productDetails">Product Details</h5>
+                        <button type="button" class="btn-close" (click)="closeView()"></button>
+                    </div>
+                    <div class="modal-body">
+                        <app-product-details [productInfo]="productInformation">
+
+                        </app-product-details>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="closeView()">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-backdrop"
+        *ngIf="selectedButton == 'View' || selectedButton == 'Edit'|| selectedButton == 'Add Products'"></div>
